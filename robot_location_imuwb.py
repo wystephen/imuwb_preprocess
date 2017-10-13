@@ -30,5 +30,33 @@ import scipy as sp
 
 import matplotlib.pyplot as plt
 
+import os
+
+
+import UwbDataPreprocess
+
 if __name__ == '__main__':
-    
+
+    dir_name = "/home/steve/Data/IU/80/"
+    uwb_data = np.zeros(1)
+    imu_data = np.zeros(1)
+
+    for name in os.listdir(dir_name):
+        if 'uwb' in name:
+            # uwb_data = np.loadtxt(dir_name+name,delimiter=',')
+            udp = UwbDataPreprocess.UwbDataPre(dir_name)
+            udp.save()
+            uwb_data = np.loadtxt(dir_name+'uwb_result.csv',delimiter=',')
+
+
+        if 'imu' in name:
+            imu_data = np.loadtxt(dir_name+name,delimiter=',')
+
+
+    plt.figure()
+    plt.plot(imu_data[:,0],'r')
+    plt.plot(uwb_data[:,1],'b')
+    plt.show()
+
+
+
