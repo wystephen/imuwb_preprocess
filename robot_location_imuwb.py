@@ -37,7 +37,7 @@ import UwbDataPreprocess
 
 if __name__ == '__main__':
 
-    dir_name = "/home/steve/Data/IU/80/"
+    dir_name = "/home/steve/Data/IU/81/"
     uwb_data = np.zeros(1)
     imu_data = np.zeros(1)
 
@@ -52,10 +52,20 @@ if __name__ == '__main__':
         if 'imu' in name:
             imu_data = np.loadtxt(dir_name+name,delimiter=',')
 
+    k = (imu_data[-1,0]-imu_data[0,0])/float(imu_data.shape[0])
+
+    for i in range(1,imu_data.shape[0]):
+        imu_data[i,0] = imu_data[0,0] + k * i
+
+    print("end time diff:",imu_data[-1,0]-uwb_data[-1,0])
+    print("start time diff: ", imu_data[0,0] - uwb_data[0,0])
 
     plt.figure()
     plt.plot(imu_data[:,0],'r')
-    plt.plot(uwb_data[:,1],'b')
+    plt.plot(uwb_data[:,0],'b')
+
+    np.savetxt(dir_name+'pre_imu.csv',imu_data)
+    np.savetxt(dir_name+'pre_uwb.csv',uwb_data)
     plt.show()
 
 
