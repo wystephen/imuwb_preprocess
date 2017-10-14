@@ -42,7 +42,7 @@ if __name__ == '__main__':
     imu_data = np.zeros(1)
 
     for name in os.listdir(dir_name):
-        if 'uwb' in name:
+        if 'uwb' in name and (not 'pre_uwb' in name):
             # uwb_data = np.loadtxt(dir_name+name,delimiter=',')
             udp = UwbDataPreprocess.UwbDataPre(dir_name)
             udp.save()
@@ -63,6 +63,11 @@ if __name__ == '__main__':
     plt.figure()
     plt.plot(imu_data[:,0],'r')
     plt.plot(uwb_data[:,0],'b')
+
+    plt.figure()
+
+    for i in range(1,imu_data.shape[0]):
+        plt.plot(imu_data[:,i],'-+')
 
     np.savetxt(dir_name+'pre_imu.csv',imu_data)
     np.savetxt(dir_name+'pre_uwb.csv',uwb_data)
