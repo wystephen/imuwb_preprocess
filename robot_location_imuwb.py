@@ -35,7 +35,7 @@ import UwbDataPreprocess
 
 if __name__ == '__main__':
 
-    dir_name = "/home/steve/Data/IU/79/"
+    dir_name = "/home/steve/Data/IU/82/"
     uwb_data = np.zeros(1)
     imu_data = np.zeros(1)
 
@@ -78,22 +78,24 @@ if __name__ == '__main__':
 
     uwb_array = array('d')
 
-    uwb_one_line = np.zeros(4)
-    uwb_one_line_time = np.zeros(4)
+    uwb_one_line = np.zeros(uwb_data.shape[1]-1)
+    uwb_one_line_time = np.zeros(uwb_data.shape[1]-1)
     interval_time = 0.5
 
     last_time = uwb_data[0, 0]
+    print('uwb data shape:',uwb_data.shape)
     for i in range(uwb_data.shape[0]):
+        for j in range(len(uwb_one_line)):
+            if (uwb_data[i, j+1] > 0.0):
+                uwb_one_line[j] = uwb_data[i, j+1]
         if uwb_data[i, 0] > last_time + interval_time:
             uwb_array.append(last_time)
-            for j in range(4):
+            for j in range(len(uwb_one_line)):
                 uwb_array.append(uwb_one_line[j])
             if i < uwb_data.shape[0]-1:
                 last_time = uwb_data[i+1,0]
-        else:
-            for j in range(4):
-                if (uwb_data[i, j+1] > 0.0):
-                    uwb_one_line[j] = uwb_data[i, j+1]
+
+
 
     uwb_data = np.frombuffer(uwb_array, dtype=np.float)
     uwb_data = uwb_data.reshape([-1,5])
